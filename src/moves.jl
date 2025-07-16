@@ -125,3 +125,4 @@ function Arianna.sample_action!(action::Corner, ::SimpleUniform, parameters, sys
     direction2 = system.position[action.i] - system.position[action.i+1]
     action.δ = -direction1 - direction2
 end
+
