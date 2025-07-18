@@ -11,7 +11,7 @@ fold_back(x, box) = x .- fld.(x, box) .* box
 
 function vector_1D(c1, c2, side_length)
     dx = c1 - c2
-    return dx - round(dx / side_length) * side_length
+    return Int(dx - round(dx / side_length) * side_length)
 end
 
 @inline function vector(c1::SVector{N,Int}, c2::SVector{N,Int}, box::SVector{N,Int}) where {N}
