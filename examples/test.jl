@@ -16,7 +16,7 @@ d = 3
 temperature = 1.0
 box = SVector{d, Int}(N+1, N+1, N+1)
 
-function create_bond_matrix(N::Int, step::Int=0)
+function create_bond_matrix(N::Int; step::Int=0)
     # Create a vector to store the SVectors, each containing a pair of integers
     matrix = Vector{Vector{Int}}()
     # Populate the matrix with pairs according to the specified pattern
@@ -33,7 +33,7 @@ end
 #position = [position1; position2]
 
 bonds1 = create_bond_matrix(N1)
-bonds2 = create_bond_matrix(N2)
+bonds2 = create_bond_matrix(N2; step=25)
 bonds = [bonds1; bonds2]
 
 #molecule1 = [1 for i in 1:N1]
@@ -69,10 +69,10 @@ molecules = System(position, species, molecule, box, temperature, interaction_ma
 chains = [molecules]
 displacement_policy = SimpleUniform()
 pool = (
-    #Move(Tail(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.1),
-    #Move(Displacement(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.1),
+    Move(Tail(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.1),
+    Move(Displacement(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.1),
 
-    Move(Corner(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 1.0 ),
+    Move(Corner(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.8 ),
 )
 ## Define the simulation struct
 steps = 1000000
