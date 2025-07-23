@@ -7,3 +7,23 @@
 
 
 Simple Lattice version of ParticlesMC. To be merged in ParticlesMC?
+
+
+## Installation
+
+### Requirements
+- Julia version 1.9 or higher
+
+### Installing LatticeParticlesMC
+You can install `LatticeParticlesMC` using the Julia package manager in one of two ways:
+
+1. Using the package mode (press `]` in the Julia REPL):
+```julia
+add https://github.com/romainljsimon/LatticeParticlesMC.jl.git
+```
+
+2. Using the Pkg API:
+```julia
+using Pkg
+Pkg.add(url="https://github.com/romainljsimon/LatticeParticlesMC.jl.git")
+```
