@@ -67,15 +67,17 @@ interaction_matrix = readdlm("examples/interaction.dat")
 
 molecules = System(position, species, molecule, box, temperature, interaction_matrix, bonds)
 chains = [molecules]
-displacement_policy = SimpleUniform()
-pool = (
-    Move(Tail(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.1),
-    Move(Displacement(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.1),
 
-    Move(Corner(0, zero(chains[1].box), 0.0), displacement_policy, Vector{Float64}(), 0.8 ),
+policy = SimpleUniform()
+parameters = Vector{Float64}()
+pool = (
+    Move(Tail(0, zero(chains[1].box), 0.0), policy, parameters, 0.1),
+    Move(Displacement(0, zero(chains[1].box), 0.0), policy, parameters, 0.1),
+
+    Move(Corner(0, zero(chains[1].box), 0.0), policy, parameters, 0.8 ),
 )
 ## Define the simulation struct
-steps = 1000000
+steps = 100000
 burn = 0
 block = [0, 10000]
 sampletimes = build_schedule(steps, burn, block)
