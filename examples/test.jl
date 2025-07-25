@@ -1,7 +1,5 @@
 using LatticeParticlesMC
 using Arianna
-
-using Distributions
 using Random
 using StaticArrays
 using DelimitedFiles

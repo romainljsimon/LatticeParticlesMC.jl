@@ -143,7 +143,7 @@ end
 """
     mutable struct Crankshaft{T<:AbstractArray} <: Action
 
-A struct representing a displacement action, where particle i is moved by specified amounts `δ`.
+A struct representing a Crankshaft action, where particle i is moved by specified amounts `δ`.
 
 # Fields
 - `i::Int`: Indices of the particles or elements in `system` to be displaced.
