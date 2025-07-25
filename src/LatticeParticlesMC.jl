@@ -4,6 +4,7 @@ using Arianna
 using StaticArrays
 using Statistics
 using Printf
+using LinearAlgebra
 
 export Particles
 abstract type Particles <: AriannaSystem end
@@ -21,7 +22,7 @@ Base.eachindex(system::Particles) = Base.OneTo(length(system))
 
 export System, Molecules
 export SimpleUniform
-export Tail, Corner, Displacement
+export Tail, Corner, Displacement, Crankshaft
 export callback_energy
 export nearest_image_distance_squared
 export EXYZ

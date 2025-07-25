@@ -138,7 +138,77 @@ function Arianna.sample_action!(action::Corner, ::SimpleUniform, parameters, sys
 end
 
 ###############################################################################
-# SIMPLE Displacement
+# SIMPLE CRANKSHAFT
+
+"""
+    mutable struct Crankshaft{T<:AbstractArray} <: Action
+
+A struct representing a displacement action, where particle i is moved by specified amounts `δ`.
+
+# Fields
+- `i::Int`: Indices of the particles or elements in `system` to be displaced.
+- `δ::T`: Displacement values for each corresponding index in `is`.
+"""
+mutable struct Crankshaft{T<:AbstractArray, F<:AbstractFloat} <: Action
+    i::Int
+    δ::T
+    δe::F
+end
+
+function update_position!(system::Particles, action::Crankshaft)
+    @inbounds system.position[action.i] = system.position[action.i] + action.δ
+    @inbounds system.position[action.i + 1] = system.position[action.i + 1] + action.δ
+end
+
+function perform_action!(system::Particles, action::Crankshaft)
+    e₁ = compute_energy_particle(system, action.i) + compute_energy_particle(system, action.i + 1)
+    update_position!(system, action)
+    e₂ = compute_energy_particle(system, action.i) + compute_energy_particle(system, action.i + 1)
+    action.δe = e₂ - e₁
+    return e₁, e₂
+end
+
+function Arianna.invert_action!(action::Crankshaft, ::Particles)
+    action.δ = -action.δ
+end
+
+function Arianna.revert_action!(action::Crankshaft, ::Particles)
+   update_position!(system, action)
+   system.energy[1] -= action.δe
+end
+
+
+function Arianna.log_proposal_density(::Crankshaft, ::SimpleUniform, parameters, system::Particles)
+    return -1
+end
+
+function Arianna.sample_action!(action::Crankshaft, ::SimpleUniform, parameters, system::Particles, rng)
+    # Select on molecule, then select one end atom and move it
+    molecule = rand(rng, 1:system.Nmol)
+    start_mol, end_mol = get_start_end_mol(system, molecule)
+    if system.length_mol[molecule] < 4
+        action.i = rand(rng, start_mol+1:end_mol-2)
+        action.δ = SVector{system.d, Int}(0, 0, 0)
+        return
+    end
+    action.i = rand(rng, start_mol+1:end_mol-2)
+    iscrank = norm(system.position[action.i+2] - system.position[action.i-1]) == 1
+    if !iscrank
+        action.i = rand(rng, start_mol+1:end_mol-2)
+        action.δ = SVector{system.d, Int}(0, 0, 0)
+        return
+    end
+    vec_im1 = system.position[action.i] - system.position[action.i-1]
+    vec_ip1 = system.position[action.i] - system.position[action.i+1]
+    direction1 = vec_im1
+    direction2 = vec_im1 × vec_ip1
+    direction3 = - direction2
+    action.δ = -direction1 - rand(rng, [direction1, direction2, direction3])
+end
+
+
+###############################################################################
+# SIMPLE DISPLACEMENT
 
 """
     mutable struct Displacement{T<:AbstractArray} <: Action

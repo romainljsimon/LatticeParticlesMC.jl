@@ -73,8 +73,8 @@ parameters = Vector{Float64}()
 pool = (
     Move(Tail(0, zero(chains[1].box), 0.0), policy, parameters, 0.1),
     Move(Displacement(0, zero(chains[1].box), 0.0), policy, parameters, 0.1),
-
-    Move(Corner(0, zero(chains[1].box), 0.0), policy, parameters, 0.8 ),
+    Move(Corner(0, zero(chains[1].box), 0.0), policy, parameters, 0.7 ),
+    Move(Crankshaft(0, zero(chains[1].box), 0.0), policy, parameters, 0.1 ),
 )
 ## Define the simulation struct
 steps = 100000
